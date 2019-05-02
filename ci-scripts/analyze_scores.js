@@ -4,7 +4,19 @@ const fs = require("fs");
 const path = require("path");
 const bot = require("circle-github-bot").create();
 
-const pkg = JSON.parse(fs.readFileSync(process.argv[2], "utf8"));
+const pkg = {
+  "lighthouse": {
+    "requiredScores": {
+      "performance": 95,
+      "accessibility": 90,
+      "best-practices": 80,
+      "seo": 90,
+      "bundle-size": 100
+    },
+    "maxBundleSizeKb": 250,
+    "jsBundleRegex": "/static/js/[^(main)].*chunk\\.js"
+  }
+};
 const requiredScores = pkg.lighthouse.requiredScores;
 
 const reportsDir = process.argv[3];
