@@ -103,7 +103,6 @@ jobs:
           #   AND json, so we can extract scores from them programmatically.
           command: |
             lighthouse $TEST_URL \
-              --config-path=./lighthouse-config/custom-config.js \
               --port=9222 \
               --chrome-flags=\"--headless\" \
               --output-path=/home/chrome/reports/anonymous-"$(echo -n $CIRCLE_SHELL_ENV | md5sum | awk '{print $1}')" \
