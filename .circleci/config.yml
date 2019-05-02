@@ -58,32 +58,6 @@ jobs:
             - ~/.config/yarn
           key: node-v1-{{ checksum "package.json" }}-{{ checksum "yarn.lock" }}
 
-  # Build and deploy application to Cloudfront. It is pretty much
-  # all AMPLIFY-SPECIFIC.
-  deployToStaging:
-    docker:
-      - image: circleci/node:10.15.0
-
-    steps:
-      - checkout
-
-      - run: yarn config set prefix ~/.yarn
-
-      # Fetch node_modules from the cache. Note: we are using the CircleCI 
-      # cache here but it would probably be more optimal to use the Workspace
-      # to pass the installed node_modules across sequential jobs in the same
-      # Workflow.
-      - restore_cache:
-          keys:
-            - node-v1-{{ checksum "package.json" }}-{{ checksum "yarn.lock" }}
-
-      # amplify doesn't presently support AWS creds as environment variables, so
-      # we write ~/.aws/credentials based on environment variables we have set
-      # manually in CircleCI. ok sure.
-      - run: ./ci-scripts/write_aws_creds_file.sh
-      - run: ./ci-scripts/amplify_init.sh
-      - run: ~/.yarn/bin/amplify env checkout staging
-      - run: ~/.yarn/bin/amplify publish -y --invalidateCloudFront
 
   # Run Lighthouse against staging deployment -- anonymous user hitting 
   # the app's home page
@@ -239,15 +213,12 @@ workflows:
   deployToStagingAndTest:
     jobs:
       - nodeModules
-      - deployToStaging:
-          requires: 
-            - nodeModules
       - perfTests:
           requires: 
-            - deployToStaging
+            - nodeModules
       - perfTestsAuthenticated:
           requires: 
-            - deployToStaging
+            - nodeModules
       - processResults:
           requires: 
             - perfTests
