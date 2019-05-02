@@ -70,7 +70,7 @@ jobs:
     # Sadly there is currently no official lighthouse docker image. But
     # it is on their radar github.com/GoogleChrome/lighthouse/issues/3715
     docker:
-      - image: kporras07/lighthouse-ci
+      - image: kanopi/ci:edge-lighthouse
 
     steps:
       - checkout
@@ -105,14 +105,14 @@ jobs:
             lighthouse $TEST_URL \
               --port=9222 \
               --chrome-flags=\"--headless\" \
-              --output-path=/home/chrome/reports/anonymous-"$(echo -n $CIRCLE_SHELL_ENV | md5sum | awk '{print $1}')" \
+              --output-path=/opt/reports/anonymous-"$(echo -n $CIRCLE_SHELL_ENV | md5sum | awk '{print $1}')" \
               --output=json \
               --output=html
 
       # Save the reports just generated in a place where the _next job_ in the
       # workflow can snag them all and do analysis on them. 
       - persist_to_workspace:
-          root: /home/chrome
+          root: /opt
           paths:
             - reports
 
