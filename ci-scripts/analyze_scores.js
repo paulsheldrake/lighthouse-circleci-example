@@ -13,10 +13,6 @@ const reports = {
   anonymous: {
     json: [],
     htmlFilenames: [],
-  },
-  authenticated: {
-    json: [],
-    htmlFilenames: [],
   }
 };
 
