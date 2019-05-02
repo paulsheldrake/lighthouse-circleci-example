@@ -7,14 +7,11 @@ const bot = require("circle-github-bot").create();
 const pkg = {
   "lighthouse": {
     "requiredScores": {
-      "performance": 95,
-      "accessibility": 90,
+      "performance": 80,
+      "accessibility": 80,
       "best-practices": 80,
-      "seo": 90,
-      "bundle-size": 100
-    },
-    "maxBundleSizeKb": 250,
-    "jsBundleRegex": "/static/js/[^(main)].*chunk\\.js"
+      "seo": 80
+    }
   }
 };
 const requiredScores = pkg.lighthouse.requiredScores;
