@@ -102,8 +102,8 @@ jobs:
           # - We use --output to get reports in html, so people can view them, 
           #   AND json, so we can extract scores from them programmatically.
           command: |
-            MAX_BUNDLE_SIZE_KB="$(node -p 'require("./package.json").lighthouse.maxBundleSizeKb')" \
-            JS_BUNDLE_REGEX="$(node -p 'require("./package.json").lighthouse.jsBundleRegex')" \
+#            MAX_BUNDLE_SIZE_KB="$(node -p 'require("./package.json").lighthouse.maxBundleSizeKb')" \
+#            JS_BUNDLE_REGEX="$(node -p 'require("./package.json").lighthouse.jsBundleRegex')" \
             lighthouse $TEST_URL \
               --config-path=./lighthouse-config/custom-config.js \
               --port=9222 \
