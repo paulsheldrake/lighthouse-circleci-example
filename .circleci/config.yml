@@ -76,6 +76,7 @@ jobs:
       - checkout
 
       - run:
+          shell: /bin/sh
           name: Run lighthouse against staging deployment
 
           # Set TEST_URL as an environment variable so that our custom config
@@ -156,6 +157,7 @@ jobs:
       # on the CircleCI side, the PR status will automatically be set to
       # pass/fail based on whether this workflow passes or fails.
       - run:
+          shell: /bin/sh
           name: Analyze and report desired vs actual lighthouse scores
           command: ./ci-scripts/analyze_scores.js package.json reports
 
