@@ -103,7 +103,7 @@ jobs:
           # - We use --output to get reports in html, so people can view them, 
           #   AND json, so we can extract scores from them programmatically.
           command: |
-            echo "source $HOME/.profile" >> $BASH_ENV
+            echo 'source /home/circleci/.profile' >> $BASH_ENV source /home/circleci/.bashrc
             lighthouse $TEST_URL \
               --port=9222 \
               --chrome-flags=\"--headless\" \
