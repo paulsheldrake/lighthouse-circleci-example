@@ -106,10 +106,7 @@ workflows:
   version: 2
   deployToStagingAndTest:
     jobs:
-      - nodeModules
-      - perfTests:
-          requires: 
-            - nodeModules
+      - perfTests
       - processResults:
           requires: 
             - perfTests
