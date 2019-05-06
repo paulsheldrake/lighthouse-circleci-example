@@ -17,7 +17,7 @@ jobs:
       - checkout
 
       - run:
-          shell: /bin/bash
+          shell: /bin/bash -l
           name: Run lighthouse against staging deployment
 
           # Set TEST_URL as an environment variable so that our custom config
