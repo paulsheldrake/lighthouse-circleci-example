@@ -11,7 +11,7 @@ jobs:
     # Sadly there is currently no official lighthouse docker image. But
     # it is on their radar github.com/GoogleChrome/lighthouse/issues/3715
     docker:
-      - image: kanopi/ci:edge-lighthouse
+      - image: kanopi/ci
 
     steps:
       - checkout
