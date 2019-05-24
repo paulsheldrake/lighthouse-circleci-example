@@ -11,7 +11,7 @@ jobs:
     # Sadly there is currently no official lighthouse docker image. But
     # it is on their radar github.com/GoogleChrome/lighthouse/issues/3715
     docker:
-      - image: kanopi/ci
+      - image: kanopi/ci:edge-lighthouse
 
     steps:
       - checkout
@@ -44,6 +44,8 @@ jobs:
           # - We use --output to get reports in html, so people can view them, 
           #   AND json, so we can extract scores from them programmatically.
           command: |
+            [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+            nvm use 10
             lighthouse $TEST_URL \
               --port=9222 \
               --chrome-flags=\"--headless\" \
