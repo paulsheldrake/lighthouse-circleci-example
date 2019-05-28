@@ -76,7 +76,7 @@ jobs:
       - run:
           name: Analyze and report desired vs actual lighthouse scores
           command: |
-            /opt/ci-scripts/analyze_scores.js lighthouse.json reports
+            node /opt/ci-scripts/analyze_scores.js lighthouse.json reports
 
 
 
