@@ -80,7 +80,7 @@ jobs:
       - run:
           shell: /bin/sh
           name: Analyze and report desired vs actual lighthouse scores
-          command: ./ci-scripts/analyze_scores.js lighthouse.json reports
+          command: /opt/ci-scripts/analyze_scores.js lighthouse.json reports
 
 
 
