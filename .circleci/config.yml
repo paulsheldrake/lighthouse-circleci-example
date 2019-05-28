@@ -49,6 +49,7 @@ jobs:
               --output-path=/opt/reports/anonymous-"$(echo -n $CIRCLE_SHELL_ENV | md5sum | awk '{print $1}')" \
               --output=json \
               --output=html
+            /opt/ci-scripts/analyze_scores.js lighthouse.json reports
 
       # Save the reports just generated in a place where the _next job_ in the
       # workflow can snag them all and do analysis on them. 
