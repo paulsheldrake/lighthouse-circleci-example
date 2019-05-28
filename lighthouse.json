@@ -1,0 +1,8 @@
+{
+  "requiredScores": {
+    "performance": 95,
+    "accessibility": 90,
+    "best-practices": 80,
+    "seo": 90
+  }
+}
