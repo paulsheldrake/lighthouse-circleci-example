@@ -68,19 +68,19 @@ jobs:
           path: reports
           destination: reports
 
-    # Compare our desired goals, expressed in the `lighthouse` section of
-    # `package.json`, against the actual test results. Right now we simply
-    # use the _best score_ across all runs for each category. If we want
-    # to fail the job, and consequently fail the workflow, the script exits
-    # with a nonzero exit code.
-    #
-    # Finally, we post a comment to GH. Because we enabled GH "checks integration"
-    # on the CircleCI side, the PR status will automatically be set to
-    # pass/fail based on whether this workflow passes or fails.
-    - run:
-        shell: /bin/sh
-        name: Analyze and report desired vs actual lighthouse scores
-        command: ./ci-scripts/analyze_scores.js lighthouse.json reports
+      # Compare our desired goals, expressed in the `lighthouse` section of
+      # `package.json`, against the actual test results. Right now we simply
+      # use the _best score_ across all runs for each category. If we want
+      # to fail the job, and consequently fail the workflow, the script exits
+      # with a nonzero exit code.
+      #
+      # Finally, we post a comment to GH. Because we enabled GH "checks integration"
+      # on the CircleCI side, the PR status will automatically be set to
+      # pass/fail based on whether this workflow passes or fails.
+      - run:
+          shell: /bin/sh
+          name: Analyze and report desired vs actual lighthouse scores
+          command: ./ci-scripts/analyze_scores.js lighthouse.json reports
 
 
 
