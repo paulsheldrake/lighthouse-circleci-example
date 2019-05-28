@@ -76,8 +76,8 @@ jobs:
       - run:
           name: Analyze and report desired vs actual lighthouse scores
           command: |
-            npm install -g circle-github-bot
-            node /opt/ci-scripts/analyze_scores.js lighthouse.json reports
+            cd /opt/ci-scripts
+            node ./analyze_scores.js lighthouse.json reports
 
 
 
