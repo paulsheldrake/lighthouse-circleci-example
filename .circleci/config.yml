@@ -17,7 +17,6 @@ jobs:
       - checkout
 
       - run:
-          shell: /bin/bash
           name: Run lighthouse against staging deployment
 
           # Set TEST_URL as an environment variable so that our custom config
@@ -44,9 +43,6 @@ jobs:
           # - We use --output to get reports in html, so people can view them, 
           #   AND json, so we can extract scores from them programmatically.
           command: |
-            export NVM_DIR="/home/circleci/.nvm"
-            [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-            nvm use 10
             lighthouse $TEST_URL \
               --port=9222 \
               --chrome-flags=\"--headless\" \
@@ -80,10 +76,7 @@ jobs:
       - run:
           name: Analyze and report desired vs actual lighthouse scores
           command: |
-            export NVM_DIR="/home/circleci/.nvm"
-            [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-            nvm use 10
-            /home/circleci/ci-scripts/analyze_scores.js lighthouse.json reports
+            /opt/ci-scripts/analyze_scores.js lighthouse.json reports
 
 
 
