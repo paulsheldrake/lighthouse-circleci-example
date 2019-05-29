@@ -43,7 +43,7 @@ jobs:
           # - We use --output to get reports in html, so people can view them, 
           #   AND json, so we can extract scores from them programmatically.
           command: |
-            TEST_URL="$(node -p 'require("./lighthouse.json").url')" \
+            TEST_URL="$(node -p 'require("./lighthouse.json").url')"
             lighthouse $TEST_URL \
               --port=9222 \
               --chrome-flags=\"--headless\" \
