@@ -68,11 +68,7 @@ jobs:
     steps:
       - checkout
 
-      # (again, or caching strategy around node_modules could probably be
-      # way more optimized, but for now it gets the job done.)
-      - restore_cache:
-          keys:
-            - node-v1-{{ checksum "package.json" }}-{{ checksum "yarn.lock" }}
+
 
       # Mount the workspace (which contains all our reports) into this
       # container. The reports are subsequently available at ./reports/
