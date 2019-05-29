@@ -19,11 +19,6 @@ jobs:
       - run:
           name: Run lighthouse against staging deployment
 
-          # Set TEST_URL as an environment variable so that our custom config
-          # file (see below) can know about it
-          environment:
-            TEST_URL: https://www.kanopistudios.com
-
           # - Extract max JS bundle size, as well as a regular expression that
           #   identifies our main JS bundle, from their definitions in `package.json`.
           #   Store them in environment variables so that our custom confg
@@ -43,6 +38,7 @@ jobs:
           # - We use --output to get reports in html, so people can view them, 
           #   AND json, so we can extract scores from them programmatically.
           command: |
+            TEST_URL="$(node -p 'require("./lighthouse.json").url')" \
             lighthouse $TEST_URL \
               --port=9222 \
               --chrome-flags=\"--headless\" \
