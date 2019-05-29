@@ -9,7 +9,7 @@ jobs:
 
     # Load Kanopi's image
     docker:
-      - image: kanopi/ci:edge-lghths
+      - image: kanopi/ci:edge-lighthouse
 
     steps:
       - checkout
@@ -39,7 +39,7 @@ jobs:
   # Analyze all the reports.
   processResults:
     docker:
-      - image: kanopi/ci:edge-lghths
+      - image: kanopi/ci:edge-lighthouse
 
     steps:
       - checkout
