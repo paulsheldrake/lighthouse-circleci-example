@@ -77,7 +77,8 @@ jobs:
           name: Analyze and report desired vs actual lighthouse scores
           command: |
             cd /opt/ci-scripts
-            node ./analyze_scores.js lighthouse.json reports
+            npm install
+            ./analyze_scores.js lighthouse.json reports
 
 
 
