@@ -22,7 +22,7 @@ jobs:
           # Set TEST_URL as an environment variable so that our custom config
           # file (see below) can know about it
           environment:
-            TEST_URL: https://staging.kubernetesfordogs.com
+            TEST_URL: https://www.kanopistudios.com
 
           # - Extract max JS bundle size, as well as a regular expression that
           #   identifies our main JS bundle, from their definitions in `package.json`.
@@ -76,7 +76,7 @@ jobs:
       - run:
           name: Analyze and report desired vs actual lighthouse scores
           command: |
-            /opt/ci-scripts/analyze_scores.js lighthouse.json reports
+            /opt/ci-scripts/analyze_scores.js lighthouse.json /opt/reports
 
 
 
