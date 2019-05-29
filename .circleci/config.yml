@@ -23,6 +23,7 @@ jobs:
             lighthouse $TEST_URL \
               --port=9222 \
               --chrome-flags=\"--headless\" \
+              --emulated-form-factor=mobile \
               --output-path=/opt/reports/anonymous-"$(echo -n $CIRCLE_SHELL_ENV | md5sum | awk '{print $1}')" \
               --output=json \
               --output=html
