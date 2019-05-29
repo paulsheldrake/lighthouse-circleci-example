@@ -15,7 +15,7 @@ jobs:
       - checkout
 
       - run:
-          name: Run lighthouse against staging deployment
+          name: Run lighthouse tests
 
           # Load the url to test from the JSON file.
           command: |
