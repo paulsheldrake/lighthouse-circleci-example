@@ -1,15 +1,13 @@
 version: 2
 jobs:
-  # Run Lighthouse against staging deployment -- anonymous user hitting 
-  # the app's home page
+  # Perf tests
   perfTests:
     # Number of parallel Lighthouse runs against this url. Why more than one?
     # Some perf metrics vary across runs based on backend flakiness, etc, and 
     # this way we can extract a best score or median across runs.
     parallelism: 3
 
-    # Sadly there is currently no official lighthouse docker image. But
-    # it is on their radar github.com/GoogleChrome/lighthouse/issues/3715
+    # Load Kanopi's image
     docker:
       - image: kanopi/ci:edge-lghths
 
@@ -19,29 +17,7 @@ jobs:
       - run:
           name: Run lighthouse against staging deployment
 
-          # Set TEST_URL as an environment variable so that our custom config
-          # file (see below) can know about it
-#          environment:
-#            TEST_URL: $(node -p 'require("./lighthouse.json").1.url')
-
-          # - Extract max JS bundle size, as well as a regular expression that
-          #   identifies our main JS bundle, from their definitions in `package.json`.
-          #   Store them in environment variables so that our custom confg
-          #   can reference them.
-          #
-          # - Invoke `lighthouse`, passing in a custom config file via --config-path.
-          #   The config file is how we include our custom audit.
-          #
-          # - The container is defined to run as user `chrome` (side note, can't run
-          #   Chrome browser as root!) We store the Lighthouse reports in user 
-          #   `chrome`'s home directory via the --output-path.
-          #
-          # - Also via --output-path, the reports will have in their file 
-          #   name `anonymous` (as opposed to authenticated) and a checksum 
-          #   of a unique value from the container where they were executed 
-          #
-          # - We use --output to get reports in html, so people can view them, 
-          #   AND json, so we can extract scores from them programmatically.
+          # Load the url to test from the JSON file.
           command: |
             TEST_URL="$(node -p 'require("./lighthouse.json").url')"
             lighthouse $TEST_URL \
@@ -59,17 +35,13 @@ jobs:
             - reports
 
 
-  # Analyze all the reports, decide if we should pass or fail, and
-  # report back with a comment on the PR that provides A) the scores and
-  # B) links to the html reports for all the test runs.
+  # Analyze all the reports.
   processResults:
     docker:
       - image: kanopi/ci:edge-lghths
 
     steps:
       - checkout
-
-
 
       # Mount the workspace (which contains all our reports) into this
       # container. The reports are subsequently available at ./reports/
@@ -83,15 +55,7 @@ jobs:
           path: reports
           destination: reports
 
-      # Compare our desired goals, expressed in the `lighthouse` section of
-      # `package.json`, against the actual test results. Right now we simply
-      # use the _best score_ across all runs for each category. If we want
-      # to fail the job, and consequently fail the workflow, the script exits
-      # with a nonzero exit code.
-      #
-      # Finally, we post a comment to GH. Because we enabled GH "checks integration"
-      # on the CircleCI side, the PR status will automatically be set to
-      # pass/fail based on whether this workflow passes or fails.
+      # Run the script to parse the scores.
       - run:
           shell: /bin/sh
           name: Analyze and report desired vs actual lighthouse scores
@@ -102,7 +66,7 @@ jobs:
 
 workflows:
   version: 2
-  deployToStagingAndTest:
+  lighthouseBenchmark:
     jobs:
       - perfTests
       - processResults:
