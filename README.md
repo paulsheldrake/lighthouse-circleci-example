@@ -1,24 +1,38 @@
-For more detail check out the [blog post](https://stuartsandine.com/lighthouse-circle-ci).
+# CircleCi and Lighthouse Integration 
 
-## Overview
+Here is an example of how  you can integrate [CircleCI](https://circleci.com/) and [Google Lighthouse](https://github.com/GoogleChrome/lighthouse) as part of your development flow to get performance regression checks on each pull request.
 
-This project demonstrates integrating [Lighthouse](https://developers.google.com/web/tools/lighthouse/)
-into a CI/CD pipeline with [CircleCI](https://circleci.com) so that for every pull request to this repo:
+A lot of this is built off of the work [Stuart Sandine](https://github.com/stuartsan) and the [blog post](https://stuartsandine.com/lighthouse-circle-ci/) he wrote. One of the things that I wanted to take further is make sure the process is more modular and can be dropped in to an existing flow without too much effort.  For example his analyze scores script is built in to the project specific repo but I've moved it out in to a custom docker image.       
 
-- A demo single-page app, bootstrapped with [Create React App](https://github.com/facebook/create-react-app), is built and deployed to its staging environment in AWS Cloudfront using [amplify](https://aws-amplify.github.io/)
-- Within a docker container, Lighthouse drives Chrome (headlessly) to test the performance (and accessibility, seo, etc) of multiple pages of the staging deployment:
-  - `/`: the home page is tested as an unauthenticated user
-  - `/dashboard`: the dashboard page is tested as an authenticated user. We use [puppeteer](https://github.com/GoogleChrome/puppeteer) to log in
-  - For each page, we do more than one Lighthouse run concurrently, so that we can extract a best score or median (or whatever) across runs (some performance metrics tend to vary across runs)
-  - Tests against the different pages are also run concurrently
-  - In addition to the out-of-the-box audits performed by Lighthouse, we run a custom performance audit against the size of our main JS bundle
-- We analyze the reports from all the Lighthouse runs and compare scores against predefined performance budgets. 
-- If we fail to meet any of the performance budgets, the PR status check is set to "failing" and we can optionally prevent the PR from being merged
-- We send a comment to the PR, which lists our actual scores against the performance budgets and provides links to the detailed Lighthouse html report for each run
+Another thanks goes out to [Sean Dietrich](https://github.com/sean-e-dietrich) for getting me going on the Docker stuff and the tooling he's built in to the Kanopi [CI Project](https://github.com/kanopi/ci-tools).
 
-## The most relevant things to look at
+## What you'll need
 
-- `package.json`: the `lighthouse` section defines our performance budgets for this project.
-- `.circleci/config.yml`: the CircleCI configuration file that wires everything together from the top down.
-- `ci-scripts/analyze_scores.js`: script that takes 1 or more Lighthouse reports, and a package.json containing performance budget definitions, and decides if we passed or failed, and then updates the PR with a comment.
-- `lighthouse-config/`: custom configuration files we pass into the Lighthouse CLI to set up a custom audit for bundle size, and to log in a user with puppeteer
+* [Github token](https://github.com/settings/tokens)
+   * This is to be added to CircleCI as an environment variable for the project.
+   * Variable should be named `GH_AUTH_TOKEN` in CircleCI.  
+   * This lets [CircleCI Bot](https://www.npmjs.com/package/circle-github-bot) write the comments on the PRs
+* [Enable Github checks](https://circleci.com/docs/2.0/enable-checks/) integration for the repo
+* [lighthouse.json](lighthouse.json) file
+   * Should be located in the root of the project.
+   * This is a json file used in CircleCI to know which URL to test and the minimum score to hit.
+   * Technically this could be named anything but if you name your file this the config example should "just work".
+
+
+## How it works
+
+If you look at the [config.yml](.circleci/config.yml) in this repo you'll see it's essentially broken down in to two jobs.  The first runs the Lighthouse tests against a URL and then second analyses the results.  The lighthouse job is separate so we can run it multiple times and average the difference.
+
+The second major part of this is the Docker image (`kanopi/ci:edge-lighthouse`).  This is the custom image we've built that has Lighthouse and the analyzer script baked in to it so this process is lightweight on the individual project side.
+
+## To do
+
+**Add authenticated tests**
+
+In the original example from Stuart Sandine he'd gotten some authenticated tests working. Because the analyzer script with written to deal specifically with that use case for his demo app it didn't really make sense to include at this time.  
+
+I'd like to add a way to authenticate against Wordpress and Drupal sites simply as those are the primary CMS's we develop in.
+
+**Smaller Docker Image**
+
+There is potential to build a custom Docker image just for the analyzer script and Lighthouse so it doesn't take so long to download in CircleCI 
