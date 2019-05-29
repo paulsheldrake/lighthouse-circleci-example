@@ -57,6 +57,28 @@ jobs:
           paths:
             - reports
 
+
+  # Analyze all the reports, decide if we should pass or fail, and
+  # report back with a comment on the PR that provides A) the scores and
+  # B) links to the html reports for all the test runs.
+  processResults:
+    docker:
+      - image: kanopi/ci:edge-lghths
+
+    steps:
+      - checkout
+
+      # (again, or caching strategy around node_modules could probably be
+      # way more optimized, but for now it gets the job done.)
+      - restore_cache:
+          keys:
+            - node-v1-{{ checksum "package.json" }}-{{ checksum "yarn.lock" }}
+
+      # Mount the workspace (which contains all our reports) into this
+      # container. The reports are subsequently available at ./reports/
+      - attach_workspace:
+          at: "."
+
       # Store the html and json reports in S3 as long-term artifacts associated
       # with this job. Then, we can easily send links to the html reports in the
       # PR comment.
@@ -74,9 +96,10 @@ jobs:
       # on the CircleCI side, the PR status will automatically be set to
       # pass/fail based on whether this workflow passes or fails.
       - run:
+          shell: /bin/sh
           name: Analyze and report desired vs actual lighthouse scores
           command: |
-            /opt/ci-scripts/analyze_scores.js lighthouse.json /opt/reports
+            /opt/ci-scripts/analyze_scores.js lighthouse.json reports
 
 
 
@@ -85,3 +108,6 @@ workflows:
   deployToStagingAndTest:
     jobs:
       - perfTests
+      - processResults:
+          requires:
+            - perfTests
