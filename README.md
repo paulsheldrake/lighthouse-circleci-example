@@ -10,8 +10,8 @@ Another thanks goes out to [Sean Dietrich](https://github.com/sean-e-dietrich) f
 
 * [Github token](https://github.com/settings/tokens)
    * This is to be added to CircleCI as an environment variable for the project.
-   * Variable should be named `GH_AUTH_TOKEN` in CircleCI
-* A project with CircleCI in it.
+   * Variable should be named `GH_AUTH_TOKEN` in CircleCI.  
+   * This lets [CircleCI Bot](https://www.npmjs.com/package/circle-github-bot) write the comments on the PRs
 * [Enable Github checks](https://circleci.com/docs/2.0/enable-checks/) integration for the repo
 * [lighthouse.json](lighthouse.json) file
    * Should be located in the root of the project.
